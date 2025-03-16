@@ -47,7 +47,7 @@ int main() {
     while (percobaan_login < 3 && !login_berhasil) {
         string nama_input, nim_input;
 
-        cout << "\n===== Login =====" << endl;
+        cout << "\n====== Login ======" << endl;
         cout << "Masukkan Nama: ";
         cin >> nama_input;
         cout << "Masukkan NIM: ";
