@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <limits> // Untuk numeric_limits
 
 #define MAX_PENGGUNA 100
 #define MAX_BARANG 100
@@ -23,15 +22,14 @@ struct Pengguna {
     int jumlahBarang;
 };
 
-// Fungsi untuk menampilkan tabel inventaris
 int tampilkanInventaris(const Barang inventaris[], int jumlahBarang) {
     if (jumlahBarang == 0) {
         cout << "Belum ada barang" << endl;
         return 0;
     }
 
-    cout << "No. | Nama Barang               | Stok" << endl;
-    cout << "-----------------------------------" << endl;
+    cout << "No. | Nama Barang           | Stok" << endl;
+    cout << "----------------------------------" << endl;
 
     for (int i = 0; i < jumlahBarang; i++) {
         cout << i + 1 << ".  | ";
@@ -50,6 +48,12 @@ int main() {
     int pilihan_menu, pilihan_login;
     string nama_input, nim_input;
 
+    // Tambahkan akun default
+    pengguna[jumlahPengguna].akun.nama = "WidyaAyuAnggraini";
+    pengguna[jumlahPengguna].akun.nim = "2409106011";
+    pengguna[jumlahPengguna].jumlahBarang = 0;
+    jumlahPengguna++;
+
     do {
         cout << "Menu Utama" << endl;
         cout << "1. Register" << endl;
@@ -60,16 +64,16 @@ int main() {
         if (!(cin >> pilihan_menu)) {
             cout << "Input tidak valid. Masukkan angka." << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            while (cin.get() != '\n');
             cout << "\nTekan Enter untuk melanjutkan...";
             cin.get();
             system("cls");
             continue;
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        while (cin.get() != '\n');
 
         switch (pilihan_menu) {
-            case 1: { // Register
+            case 1: {
                 if (jumlahPengguna < MAX_PENGGUNA) {
                     bool akun_sudah_ada = false;
                     do {
@@ -78,7 +82,6 @@ int main() {
                         cout << "Masukkan NIM Yang Belum Pernah Digunakan: ";
                         getline(cin, nim_input);
 
-                        // Cek apakah akun sudah ada
                         akun_sudah_ada = false;
                         for (int i = 0; i < jumlahPengguna; i++) {
                             if (pengguna[i].akun.nama == nama_input && pengguna[i].akun.nim == nim_input) {
@@ -86,7 +89,7 @@ int main() {
                                 cout << "Akun sudah ada. Masukkan nama dan NIM yang berbeda." << endl;
                                 cout << "\nTekan Enter untuk melanjutkan...";
                                 cin.clear();
-                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                while (cin.get() != '\n');
                                 cin.get();
                                 system("cls");
                                 break;
@@ -94,7 +97,6 @@ int main() {
                         }
                     } while (akun_sudah_ada);
 
-                    // Tambahkan akun baru jika belum ada
                     pengguna[jumlahPengguna].akun.nama = nama_input;
                     pengguna[jumlahPengguna].akun.nim = nim_input;
                     pengguna[jumlahPengguna].jumlahBarang = 0;
@@ -102,7 +104,7 @@ int main() {
                     cout << "Akun berhasil didaftarkan." << endl;
                     cout << "\nTekan Enter untuk melanjutkan...";
                     cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    while (cin.get() != '\n');
                     cin.get();
                     system("cls");
                 } else {
@@ -110,7 +112,7 @@ int main() {
                 }
                 break;
             }
-            case 2: { // Login
+            case 2: {
                 int percobaan_login = 0;
                 bool login_berhasil = false;
                 int index_pengguna = -1;
@@ -136,12 +138,12 @@ int main() {
                             cout << "Coba lagi. Sisa percobaan: " << 3 - percobaan_login << endl;
                             cout << "\nTekan Enter untuk melanjutkan...";
                             cin.clear();
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            while (cin.get() != '\n');
                             cin.get();
                             system("cls");
                         } else {
                             cout << "Login gagal 3 kali. Program keluar." << endl;
-                            exit(0); // Keluar dari program
+                            exit(0);
                         }
                     }
                 }
@@ -150,12 +152,11 @@ int main() {
                     cout << "Login Berhasil! Selamat datang, " << pengguna[index_pengguna].akun.nama << "!" << endl;
                     cout << "\nTekan Enter untuk melanjutkan...";
                     cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    while (cin.get() != '\n');
                     cin.get();
                     system("cls");
 
                     do {
-                        cout << "\nSilahkan pilih dari 1-5" << endl;
                         cout << "\nMenu Manajemen Inventaris" << endl;
                         cout << "1. Tampilkan Inventaris" << endl;
                         cout << "2. Tambah Barang" << endl;
@@ -168,12 +169,12 @@ int main() {
                             cout << "Input tidak valid. Masukkan angka." << endl;
                             cout << "\nTekan Enter untuk melanjutkan...";
                             cin.clear();
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            while (cin.get() != '\n');
                             cin.get();
                             system("cls");
                             continue;
                         }
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        while (cin.get() != '\n');
 
                         switch (pilihan_login) {
                             case 1:
@@ -185,7 +186,7 @@ int main() {
                                     getline(cin, pengguna[index_pengguna].inventaris[pengguna[index_pengguna].jumlahBarang].nama);
                                     cout << "Masukkan stok barang: ";
                                     cin >> pengguna[index_pengguna].inventaris[pengguna[index_pengguna].jumlahBarang].stok;
-                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    while (cin.get() != '\n');
                                     pengguna[index_pengguna].jumlahBarang++;
                                     cout << "Barang berhasil ditambahkan." << endl;
                                 } else {
@@ -201,14 +202,14 @@ int main() {
                                     int index_barang;
                                     cout << "Masukkan nomor barang yang akan diubah: ";
                                     cin >> index_barang;
-                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    while (cin.get() != '\n');
 
                                     if (index_barang > 0 && index_barang <= pengguna[index_pengguna].jumlahBarang) {
                                         cout << "Masukkan nama barang baru: ";
                                         getline(cin, pengguna[index_pengguna].inventaris[index_barang - 1].nama);
                                         cout << "Masukkan stok barang baru: ";
                                         cin >> pengguna[index_pengguna].inventaris[index_barang - 1].stok;
-                                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                        while (cin.get() != '\n');
                                         cout << "Barang berhasil diubah." << endl;
                                     } else {
                                         cout << "Nomor barang tidak valid." << endl;
@@ -224,7 +225,7 @@ int main() {
                                     int index_barang;
                                     cout << "Masukkan nomor barang yang akan dihapus: ";
                                     cin >> index_barang;
-                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    while (cin.get() != '\n');
 
                                     if (index_barang > 0 && index_barang <= pengguna[index_pengguna].jumlahBarang) {
                                         for (int i = index_barang - 1; i < pengguna[index_pengguna].jumlahBarang - 1; i++) {
@@ -247,7 +248,7 @@ int main() {
                         }
                         cout << "\nTekan Enter untuk melanjutkan...";
                         cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        while (cin.get() != '\n');
                         cin.get();
                         system("cls");
                     } while (pilihan_login != 5);
@@ -255,7 +256,7 @@ int main() {
                     cout << "Login Gagal! Akun tidak ditemukan." << endl;
                     cout << "\nTekan Enter untuk melanjutkan...";
                     cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    while (cin.get() != '\n');
                     cin.get();
                     system("cls");
                 }
@@ -268,7 +269,7 @@ int main() {
                 cout << "Pilihan tidak valid." << endl;
                 cout << "\nTekan Enter untuk melanjutkan...";
                 cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                while (cin.get() != '\n');
                 cin.get();
                 system("cls");
                 break;
