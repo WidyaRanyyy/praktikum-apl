@@ -22,26 +22,6 @@ struct Pengguna {
     int jumlahBarang;
 };
 
-int tampilkanInventaris(const Barang inventaris[], int jumlahBarang) {
-    if (jumlahBarang == 0) {
-        cout << "Belum ada barang" << endl;
-        return 0;
-    }
-
-    cout << "No. | Nama Barang           | Stok" << endl;
-    cout << "----------------------------------" << endl;
-
-    for (int i = 0; i < jumlahBarang; i++) {
-        cout << i + 1 << ".  | ";
-        cout << inventaris[i].nama;
-        for (int j = inventaris[i].nama.length(); j < 22; j++) {
-            cout << " ";
-        }
-        cout << "| " << inventaris[i].stok << endl;
-    }
-    return 1;
-}
-
 int main() {
     Pengguna pengguna[MAX_PENGGUNA];
     int jumlahPengguna = 0;
@@ -65,15 +45,12 @@ int main() {
             cout << "Input tidak valid. Masukkan angka." << endl;
             cin.clear();
             while (cin.get() != '\n');
-            cout << "\nTekan Enter untuk melanjutkan...";
-            cin.get();
-            system("cls");
             continue;
         }
         while (cin.get() != '\n');
 
         switch (pilihan_menu) {
-            case 1: {
+            case 1: { // Register
                 if (jumlahPengguna < MAX_PENGGUNA) {
                     bool akun_sudah_ada = false;
                     do {
@@ -87,11 +64,6 @@ int main() {
                             if (pengguna[i].akun.nama == nama_input && pengguna[i].akun.nim == nim_input) {
                                 akun_sudah_ada = true;
                                 cout << "Akun sudah ada. Masukkan nama dan NIM yang berbeda." << endl;
-                                cout << "\nTekan Enter untuk melanjutkan...";
-                                cin.clear();
-                                while (cin.get() != '\n');
-                                cin.get();
-                                system("cls");
                                 break;
                             }
                         }
@@ -102,17 +74,12 @@ int main() {
                     pengguna[jumlahPengguna].jumlahBarang = 0;
                     jumlahPengguna++;
                     cout << "Akun berhasil didaftarkan." << endl;
-                    cout << "\nTekan Enter untuk melanjutkan...";
-                    cin.clear();
-                    while (cin.get() != '\n');
-                    cin.get();
-                    system("cls");
                 } else {
                     cout << "Jumlah pengguna maksimum tercapai." << endl;
                 }
                 break;
             }
-            case 2: {
+            case 2: { // Login
                 int percobaan_login = 0;
                 bool login_berhasil = false;
                 int index_pengguna = -1;
@@ -136,25 +103,15 @@ int main() {
                         cout << "Login Gagal! Akun tidak ditemukan." << endl;
                         if (percobaan_login < 3) {
                             cout << "Coba lagi. Sisa percobaan: " << 3 - percobaan_login << endl;
-                            cout << "\nTekan Enter untuk melanjutkan...";
-                            cin.clear();
-                            while (cin.get() != '\n');
-                            cin.get();
-                            system("cls");
                         } else {
                             cout << "Login gagal 3 kali. Program keluar." << endl;
-                            exit(0);
+                            return 0;
                         }
                     }
                 }
 
                 if (login_berhasil) {
                     cout << "Login Berhasil! Selamat datang, " << pengguna[index_pengguna].akun.nama << "!" << endl;
-                    cout << "\nTekan Enter untuk melanjutkan...";
-                    cin.clear();
-                    while (cin.get() != '\n');
-                    cin.get();
-                    system("cls");
 
                     do {
                         cout << "\nMenu Manajemen Inventaris" << endl;
@@ -167,20 +124,30 @@ int main() {
 
                         if (!(cin >> pilihan_login)) {
                             cout << "Input tidak valid. Masukkan angka." << endl;
-                            cout << "\nTekan Enter untuk melanjutkan...";
                             cin.clear();
                             while (cin.get() != '\n');
-                            cin.get();
-                            system("cls");
                             continue;
                         }
                         while (cin.get() != '\n');
 
                         switch (pilihan_login) {
-                            case 1:
-                                tampilkanInventaris(pengguna[index_pengguna].inventaris, pengguna[index_pengguna].jumlahBarang);
+                            case 1: { // Tampilkan Inventaris
+                                if (pengguna[index_pengguna].jumlahBarang == 0) {
+                                    cout << "Belum ada barang dalam inventaris." << endl;
+                                } else {
+                                    cout << "No. | Nama Barang           | Stok" << endl;
+                                    cout << "----------------------------------" << endl;
+                                    for (int i = 0; i < pengguna[index_pengguna].jumlahBarang; i++) {
+                                        cout << i + 1 << ".  | " << pengguna[index_pengguna].inventaris[i].nama;
+                                        for (int j = pengguna[index_pengguna].inventaris[i].nama.length(); j < 22; j++) {
+                                            cout << " ";
+                                        }
+                                        cout << "| " << pengguna[index_pengguna].inventaris[i].stok << endl;
+                                    }
+                                }
                                 break;
-                            case 2: {
+                            }
+                            case 2: { // Tambah Barang
                                 if (pengguna[index_pengguna].jumlahBarang < MAX_BARANG) {
                                     cout << "Masukkan nama barang: ";
                                     getline(cin, pengguna[index_pengguna].inventaris[pengguna[index_pengguna].jumlahBarang].nama);
@@ -194,85 +161,98 @@ int main() {
                                 }
                                 break;
                             }
-                            case 3: {
+                            case 3: { // Update Barang
                                 if (pengguna[index_pengguna].jumlahBarang == 0) {
                                     cout << "Belum ada barang untuk diubah." << endl;
                                 } else {
-                                    tampilkanInventaris(pengguna[index_pengguna].inventaris, pengguna[index_pengguna].jumlahBarang);
-                                    int index_barang;
-                                    cout << "Masukkan nomor barang yang akan diubah: ";
-                                    cin >> index_barang;
-                                    while (cin.get() != '\n');
-
-                                    if (index_barang > 0 && index_barang <= pengguna[index_pengguna].jumlahBarang) {
-                                        cout << "Masukkan nama barang baru: ";
-                                        getline(cin, pengguna[index_pengguna].inventaris[index_barang - 1].nama);
-                                        cout << "Masukkan stok barang baru: ";
-                                        cin >> pengguna[index_pengguna].inventaris[index_barang - 1].stok;
-                                        while (cin.get() != '\n');
-                                        cout << "Barang berhasil diubah." << endl;
-                                    } else {
+                                    cout << "No. | Nama Barang           | Stok" << endl;
+                                    cout << "----------------------------------" << endl;
+                                    for (int i = 0; i < pengguna[index_pengguna].jumlahBarang; i++) {
+                                        cout << i + 1 << ".  | " << pengguna[index_pengguna].inventaris[i].nama;
+                                        for (int j = pengguna[index_pengguna].inventaris[i].nama.length(); j < 22; j++) {
+                                            cout << " ";
+                                        }
+                                        cout << "| " << pengguna[index_pengguna].inventaris[i].stok << endl;
+                                    }
+                                    int nomor_barang;
+                                    cout << "\nMasukkan nomor barang yang ingin diubah: ";
+                                    if (!(cin >> nomor_barang) || nomor_barang < 1 || nomor_barang > pengguna[index_pengguna].jumlahBarang) {
                                         cout << "Nomor barang tidak valid." << endl;
+                                        cin.clear();
+                                        while (cin.get() != '\n');
+                                    } else {
+                                        while (cin.get() != '\n');
+                                        cout << "Masukkan nama baru barang: ";
+                                        getline(cin, pengguna[index_pengguna].inventaris[nomor_barang - 1].nama);
+                                        cout << "Masukkan stok baru barang: ";
+                                        cin >> pengguna[index_pengguna].inventaris[nomor_barang - 1].stok;
+                                        while (cin.get() != '\n');
+                                        cout << "Barang berhasil diupdate." << endl;
                                     }
                                 }
                                 break;
                             }
-                            case 4: {
+                            case 4: { // Hapus Barang
                                 if (pengguna[index_pengguna].jumlahBarang == 0) {
                                     cout << "Belum ada barang untuk dihapus." << endl;
                                 } else {
-                                    tampilkanInventaris(pengguna[index_pengguna].inventaris, pengguna[index_pengguna].jumlahBarang);
-                                    int index_barang;
-                                    cout << "Masukkan nomor barang yang akan dihapus: ";
-                                    cin >> index_barang;
-                                    while (cin.get() != '\n');
-
-                                    if (index_barang > 0 && index_barang <= pengguna[index_pengguna].jumlahBarang) {
-                                        for (int i = index_barang - 1; i < pengguna[index_pengguna].jumlahBarang - 1; i++) {
+                                    cout << "No. | Nama Barang           | Stok" << endl;
+                                    cout << "----------------------------------" << endl;
+                                    for (int i = 0; i < pengguna[index_pengguna].jumlahBarang; i++) {
+                                        cout << i + 1 << ".  | " << pengguna[index_pengguna].inventaris[i].nama;
+                                        for (int j = pengguna[index_pengguna].inventaris[i].nama.length(); j < 22; j++) {
+                                            cout << " ";
+                                        }
+                                        cout << "| " << pengguna[index_pengguna].inventaris[i].stok << endl;
+                                    }
+                                    int nomor_barang;
+                                    cout << "\nMasukkan nomor barang yang ingin dihapus: ";
+                                    if (!(cin >> nomor_barang) || nomor_barang < 1 || nomor_barang > pengguna[index_pengguna].jumlahBarang) {
+                                        cout << "Nomor barang tidak valid." << endl;
+                                        cin.clear();
+                                        while (cin.get() != '\n');
+                                    } else {
+                                        for (int i = nomor_barang - 1; i < pengguna[index_pengguna].jumlahBarang - 1; i++) {
                                             pengguna[index_pengguna].inventaris[i] = pengguna[index_pengguna].inventaris[i + 1];
                                         }
                                         pengguna[index_pengguna].jumlahBarang--;
                                         cout << "Barang berhasil dihapus." << endl;
-                                    } else {
-                                        cout << "Nomor barang tidak valid." << endl;
+                                        while (cin.get() != '\n');
                                     }
                                 }
                                 break;
                             }
-                            case 5:
+                            case 5: { // Logout
                                 cout << "Logout berhasil." << endl;
                                 break;
-                            default:
+                            }
+                            default: {
                                 cout << "Pilihan tidak valid." << endl;
                                 break;
+                            }
                         }
-                        cout << "\nTekan Enter untuk melanjutkan...";
-                        cin.clear();
-                        while (cin.get() != '\n');
-                        cin.get();
-                        system("cls");
+                        if (pilihan_login != 5) {
+                            cout << "\nTekan Enter untuk melanjutkan..." << endl;
+                            cin.get();
+                            system("cls");
+                        }
                     } while (pilihan_login != 5);
-                } else {
-                    cout << "Login Gagal! Akun tidak ditemukan." << endl;
-                    cout << "\nTekan Enter untuk melanjutkan...";
-                    cin.clear();
-                    while (cin.get() != '\n');
-                    cin.get();
-                    system("cls");
                 }
                 break;
             }
-            case 3:
-                cout << "Program selesai." << endl;
-                break;
-            default:
+            case 3: { // Keluar
+                cout << "Terima kasih telah menggunakan program ini." << endl;
+                return 0;
+            }
+            default: {
                 cout << "Pilihan tidak valid." << endl;
-                cout << "\nTekan Enter untuk melanjutkan...";
-                cin.clear();
-                while (cin.get() != '\n');
-                cin.get();
-                system("cls");
                 break;
+            }
+        }
+        if (pilihan_menu != 3 && pilihan_menu != 2) {
+            cout << "\nTekan Enter untuk melanjutkan..." << endl;
+            cin.get();
+            system("cls");
         }
     } while (pilihan_menu != 3);
 
